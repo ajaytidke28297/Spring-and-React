@@ -52,7 +52,7 @@ function App() {
     const getAllStudents = async () => {
       setIsFetching(true);
       try {
-        const response = await fetch("http://localhost:8080/student");
+        const response = await fetch("http://localhost:8080/api/student");
 
         if (!response.ok) {
           console.log("Error");

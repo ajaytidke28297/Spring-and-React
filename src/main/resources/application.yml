@@ -1,0 +1,10 @@
+server:
+  servlet:
+    context-path: /api
+
+app:
+  datasource:
+    jdbc-url: jdbc:postgresql://localhost:5432/amigos
+    username: postgres
+    password: ajay@123
+    pool-size: 30
