@@ -3,6 +3,7 @@ import Container from "./components/Container";
 import Footer from "./components/Footer";
 import "./App.css";
 import { Table, Avatar, Spin, Modal } from "antd";
+import AddStudentForm from "./components/AddStudentForm";
 
 const columns = [
   {
@@ -89,7 +90,7 @@ function App() {
         onCancel={() => setIsModalVisible(false)}
         width={1000}
       >
-        <h1>Hello from modal</h1>
+        <AddStudentForm />
       </Modal>
       <Footer
         handleAddStudentClickEvent={() => setIsModalVisible(true)}
