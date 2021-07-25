@@ -77,6 +77,7 @@ function App() {
       {isFetching && <Spin />}
       {students && (
         <Table
+          style={{ marginBottom: "100px" }}
           rowKey="studentId"
           pagination={false}
           dataSource={students}

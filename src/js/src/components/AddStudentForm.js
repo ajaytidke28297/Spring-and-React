@@ -10,6 +10,20 @@ const tagStyle = {
 };
 
 function AddStudentForm() {
+  const submitFormHandler = async (student) => {
+    try {
+      await fetch(`http://localhost:8080/api/students`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(student),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Formik
       initialValues={{
@@ -45,10 +59,9 @@ function AddStudentForm() {
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
+        submitFormHandler(values).then((res) => {
           setSubmitting(false);
-        }, 400);
+        });
       }}
     >
       {({
@@ -59,6 +72,8 @@ function AddStudentForm() {
         handleBlur,
         handleSubmit,
         isSubmitting,
+        submitForm,
+        isValid,
         /* and other goodies */
       }) => (
         <form onSubmit={handleSubmit}>
@@ -106,7 +121,11 @@ function AddStudentForm() {
           {errors.gender && touched.gender && (
             <Tag style={tagStyle}>{errors.gender}</Tag>
           )}
-          <Button type="submit" disabled={isSubmitting}>
+          <Button
+            onClick={() => submitForm()}
+            type="submit"
+            disabled={isSubmitting | (touched && !isValid)}
+          >
             Submit
           </Button>
         </form>
