@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Container from "./components/Container";
+import Footer from "./components/Footer";
 import "./App.css";
-import { Table, Avatar, Spin } from "antd";
+import { Table, Avatar, Spin, Modal } from "antd";
 
 const columns = [
   {
@@ -47,6 +48,7 @@ const columns = [
 function App() {
   const [students, setStudents] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const getAllStudents = async () => {
@@ -80,6 +82,19 @@ function App() {
           columns={columns}
         />
       )}
+      <Modal
+        title="Add new student"
+        visible={isModalVisible}
+        onOk={() => setIsModalVisible(false)}
+        onCancel={() => setIsModalVisible(false)}
+        width={1000}
+      >
+        <h1>Hello from modal</h1>
+      </Modal>
+      <Footer
+        handleAddStudentClickEvent={() => setIsModalVisible(true)}
+        numberOfStudents={students.length}
+      />
     </Container>
   );
 }
