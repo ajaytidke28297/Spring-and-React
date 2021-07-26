@@ -9,7 +9,7 @@ const tagStyle = {
   ...inputBottomMargin,
 };
 
-function AddStudentForm() {
+function AddStudentForm(props) {
   const submitFormHandler = async (student) => {
     try {
       await fetch(`http://localhost:8080/api/students`, {
@@ -20,7 +20,7 @@ function AddStudentForm() {
         body: JSON.stringify(student),
       });
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
 
@@ -60,6 +60,7 @@ function AddStudentForm() {
       }}
       onSubmit={(values, { setSubmitting }) => {
         submitFormHandler(values).then((res) => {
+          props.onSuccess();
           setSubmitting(false);
         });
       }}

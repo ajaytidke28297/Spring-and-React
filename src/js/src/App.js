@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import Container from "./components/Container";
 import Footer from "./components/Footer";
 import "./App.css";
-import { Table, Avatar, Spin, Modal } from "antd";
+import { Table, Avatar, Spin, Modal, Empty } from "antd";
 import AddStudentForm from "./components/AddStudentForm";
+import { errorNotification } from "./components/Notification";
 
 const columns = [
   {
@@ -51,31 +52,34 @@ function App() {
   const [isFetching, setIsFetching] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  useEffect(() => {
-    const getAllStudents = async () => {
-      setIsFetching(true);
-      try {
-        const response = await fetch("http://localhost:8080/api/students");
+  const getAllStudents = async () => {
+    setIsFetching(true);
+    try {
+      const response = await fetch("http://localhost:8080/api/students");
 
-        if (!response.ok) {
-          console.log("Error");
-          return;
-        }
-
-        const studentList = await response.json();
-        setStudents(studentList);
-      } catch (error) {
-        console.log(error);
+      if (!response.ok) {
+        throw new Error("Oops unable to get students data!");
       }
-      setIsFetching(false);
-    };
+
+      const studentList = await response.json();
+      setStudents(studentList);
+    } catch (error) {
+      errorNotification(error.message, "Internal Server Error");
+    }
+    setIsFetching(false);
+  };
+
+  useEffect(() => {
     getAllStudents();
   }, []);
 
   return (
     <Container>
       {isFetching && <Spin />}
-      {students && (
+      {students.length === 0 && (
+        <Empty description={<h1>No students found!</h1>} />
+      )}
+      {students.length !== 0 && (
         <Table
           style={{ marginBottom: "100px" }}
           rowKey="studentId"
@@ -91,7 +95,12 @@ function App() {
         onCancel={() => setIsModalVisible(false)}
         width={1000}
       >
-        <AddStudentForm />
+        <AddStudentForm
+          onSuccess={() => {
+            setIsModalVisible(false);
+            getAllStudents();
+          }}
+        />
       </Modal>
       <Footer
         handleAddStudentClickEvent={() => setIsModalVisible(true)}
